@@ -116,7 +116,7 @@ totalCoverageScatterBamFlexTyper <- function(my.theme) {
 
 posAlongXAxisTotalFlexTyperonY <- function(my.theme) {
 	# Plot with the position along the x axis
-	p_pos_both_total <- ggplot(data=CountData[CountData$Chrom=='1',], aes(x = Pos, y = TotalFlexTyper, color="FlexTyper" ))
+	p_pos_both_total <- ggplot(data=CountData[CountData$Chrom=='3',], aes(x = Pos, y = TotalFlexTyper, color="FlexTyper" ))
 	p_pos_both_total  +
 	  my.theme 	  +
 	  ylim(1,80) 	  +
@@ -130,7 +130,7 @@ posAlongXAxisTotalFlexTyperonY <- function(my.theme) {
 
 deltasAlongPosAxisTot <- function(my.theme) {
 	# Plot the delta along the positional axis, centered on 0 for y 
-	p_pos_delta_total <- ggplot(data=CountData[CountData$Chrom=='1',], aes(x=Pos, y=DeltaTotal))
+	p_pos_delta_total <- ggplot(data=CountData[CountData$Chrom=='3',], aes(x=Pos, y=DeltaTotal))
 	p_pos_delta_total + 
 	  my.theme 	  +
 	  ylim(-50,50) 	  +
@@ -154,7 +154,7 @@ deltaAlongPosAxisAlt <- function(my.theme) {
 
 deltaAlongPosAxisRef <- function(my.theme) {
 	# Plot the delta along the positional axis, centered on 0 for y 
-	p_pos_delta_ref <- ggplot(data=CountData[CountData$Chrom=='1',], mapping=aes(x=Pos, y=DeltaRef))
+	p_pos_delta_ref <- ggplot(data=CountData[CountData$Chrom=='3',], mapping=aes(x=Pos, y=DeltaRef))
 	p_pos_delta_ref  + 
 	  my.theme 	 +
 	  ylim(-50,50) 	 +
@@ -187,8 +187,47 @@ deltas_histogram_both <- function(my.theme) {
 	ggsave("DeltaHistBoth.png",plot= last_plot(), path="output/")
 }
 
+coverage_over_del <- function(my.theme) {
+  # 
+  p_pos_both_total <- ggplot(data=CountData[CountData$Chrom=='3' & CountData$Pos > 162400000 & CountData$Pos < 162600000,], aes(x = Pos, y = TotalFlexTyper, color="FlexTyper" ))
+  p_pos_both_total  +
+    my.theme 	  +
+    ylim(1,80) 	  +
+    geom_point(alpha=1.0) +
+    geom_abline(linetype=2,slope=0, intercept=50) +
+    geom_point(aes(x = Pos, y = TotalCoverageFromBam, color="BAM" ),alpha=1.0) +
+    xlab('Chromsomal Position [chromosome 3, over DEL region]')
+  ylab('Total Coverage and Total Count')
+  ggsave("DeletionExampleChr3.png",plot= last_plot(), height=5, width=15, path="output/")
+}
 
+coverage_over_del2 <- function(my.theme) {
+  # 
+  p_pos_both_total <- ggplot(data=CountData[CountData$Chrom=='5' & CountData$Pos > 180300000 & CountData$Pos < 180500000,], aes(x = Pos, y = TotalFlexTyper, color="FlexTyper" ))
+  p_pos_both_total  +
+    my.theme 	  +
+    ylim(1,80) 	  +
+    geom_point(alpha=1.0) +
+    geom_abline(linetype=2,slope=0, intercept=50) +
+    geom_point(aes(x = Pos, y = TotalCoverageFromBam, color="BAM" ),alpha=1.0) +
+    xlab('Chromsomal Position [chromosome 5, over DEL region]')
+  ylab('Total Coverage and Total Count')
+  ggsave("DeletionExampleChr5.png",plot= last_plot(), height=5, width=15, path="output/")
+}
 
+coverage_over_del3 <- function(my.theme) {
+  # 
+  p_pos_both_total <- ggplot(data=CountData[CountData$Chrom=='15' & CountData$Pos > 24600000 & CountData$Pos < 24800000,], aes(x = Pos, y = TotalFlexTyper, color="FlexTyper" ))
+  p_pos_both_total  +
+    my.theme 	  +
+    ylim(1,80) 	  +
+    geom_point(alpha=1.0) +
+    geom_abline(linetype=2,slope=0, intercept=50) +
+    geom_point(aes(x = Pos, y = TotalCoverageFromBam, color="BAM" ),alpha=1.0) +
+    xlab('Chromsomal Position [chromosome 5, over DEL region]')
+  ylab('Total Coverage and Total Count')
+  ggsave("DeletionExampleChr15.png",plot= last_plot(), height=5, width=15, path="output/")
+}
 
 # __main__ calls
 coverageBamFlexTyperRef(my.theme)
@@ -200,3 +239,6 @@ deltaAlongPosAxisRef(my.theme2)
 deltas_histogram_ref(my.theme)
 deltas_histogram_both(my.theme)
 deltaAlongPosAxisAlt(my.theme2)
+#coverage_over_del(my.theme2)
+#coverage_over_del2(my.theme2)
+#coverage_over_del3(my.theme2)
