@@ -8,6 +8,8 @@ def parse_arguments():
 	"""Parses inputted arguments as described"""
 	parser = argparse.ArgumentParser()
 	parser.add_argument(
+		'-0', '--ZeroBased', help="Set this option if the query file is 0 based", action='store_true')
+	parser.add_argument(
 		'-f', '--Format', help="format of output", type=str, required=True,
 		choices=["VCF", "23_and_me", "ancestry"])
 	parser.add_argument(
@@ -18,7 +20,7 @@ def parse_arguments():
 	args = parser.parse_args()
 	return args
 
-def flextyper_2_vcf(infilename, name, minSuppReads):
+def flextyper_2_vcf(infilename, name, minSuppReads, zerobased):
 	"""
 	This function creates a VCF from output query file.
 
@@ -27,6 +29,7 @@ def flextyper_2_vcf(infilename, name, minSuppReads):
 		homo alt: alt>minSuppReads and ref<minSuppReads
 		homo ref: alt<minSuppReads and ref>minSuppReads
 	"""
+	
 	infile = open(infilename,'r')
 	outfile = open("%s.vcf"%name,'w')
 	# write the header
@@ -41,7 +44,9 @@ def flextyper_2_vcf(infilename, name, minSuppReads):
 			continue
 		cols = line.strip('\n').split('\t')
 		chrom = cols[3]
-		pos = int(cols[4]) + 1 # fixed for 0-based FlexTyper query file format
+		pos = int(cols[4]) 
+		if zerobased:
+			pos+=1  # fixed for 0-based FlexTyper query file format
 		ref = cols[5]
 		alt = cols[6]
 		ID = cols[7]
@@ -58,7 +63,7 @@ def flextyper_2_vcf(infilename, name, minSuppReads):
 		outfile.write("%s\t%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s:%d:%d:%d\n"%(chrom,pos,ID,ref,alt,'.','.','.','GT:RO:AO:DP',zygosity,ref_count,alt_count,depth))
 		
 
-def flextyper_2_array(data, name, format):
+def flextyper_2_array(data, name, format, zerobased):
 	if format == "23_and_me":
 		new = open(name+"23_and_me.txt", "w+")
 		new.write("#rsid\tchromosome\tposition\tgenotype")
@@ -71,7 +76,10 @@ def flextyper_2_array(data, name, format):
 				ln = line.split("\t")
 				ln[-1] = ln[-1].rstrip()
 				chrom = ln[3]
-				pos = str(int(ln[4]) + 1)  # making 1 based
+				if zerobased:
+					pos = str(int(ln[4]) + 1)  # making 1 based
+				else:
+					pos = str(int(ln[4]))
 				ID = ln[7]
 				ref = ln[5]
 				alt = ln[6]
@@ -101,13 +109,14 @@ def main():
 	Input = args.Input
 	minSuppReads = args.minSuppReads
 	name = args.name
+	Zerobased = args.ZeroBased
 
 	if Format == "VCF":
-		flextyper_2_vcf(Input, name, minSuppReads)
+		flextyper_2_vcf(Input, name, minSuppReads,Zerobased)
 	if Format == "23_and_me":
-		flextyper_2_array(Input, name, "23_and_me")
+		flextyper_2_array(Input, name, "23_and_me", Zerobased)
 	if Format == "ancestry":
-		flextyper_2_array(Input, name, "ancestry")
+		flextyper_2_array(Input, name, "ancestry", Zerobased)
 
 
 if __name__ == "__main__":
