@@ -16,7 +16,7 @@ install:
   - $SH "apt-get update"
   - $SH "export TZ=Canada/Pacific"
   - $SH "DEBIAN_FRONTEND=noninteractive"
-  - $SH "echo 'Canada/Pacific' | tee /etc/timezone"
+  - $SH "echo 'America/Vancouver' | tee /etc/timezone"
   - $SH "apt-get install -y curl graphviz libdivsufsort-dev libdivsufsort3 libsdsl-dev libsdsl3 libgtest-dev libboost-all-dev g++-8 gcc-8 dialog && apt-get install -y whiptail git libseqan2-dev zlib1g-dev libbz2-dev cmake wget libx11-dev libdbus-glib-1-2 qt5-qmake libx11-xcb-dev libglu1-mesa-dev libxrender-dev build-essential qt5-default qtdeclarative5-dev libqt5webview5-dev"
   - $SH "unlink /usr/bin/g++ && ln -s /usr/bin/g++-8 /usr/bin/g++"
 
